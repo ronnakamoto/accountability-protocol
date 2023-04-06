@@ -1,7 +1,10 @@
+import Dropdown from "../Dropdown";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import shallow from "zustand/shallow";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Balance, BlockieAvatar } from "~~/components/scaffold-eth";
 import { useAutoConnect, useNetworkColor } from "~~/hooks/scaffold-eth";
+import { useAppStore } from "~~/services/store/store";
 import { getTargetNetwork } from "~~/utils/scaffold-eth";
 
 /**
@@ -12,6 +15,12 @@ export const RainbowKitCustomConnectButton = () => {
 
   const networkColor = useNetworkColor();
   const configuredNetwork = getTargetNetwork();
+  const [role, setRole] = useAppStore(state => [state.userRole, state.setUserRole], shallow);
+
+  const handleOnRoleSelected = (role: string) => {
+    setRole(role);
+    console.log("Role selected:", role);
+  };
 
   return (
     <ConnectButton.Custom>
@@ -23,9 +32,19 @@ export const RainbowKitCustomConnectButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
-                    Connect Wallet
-                  </button>
+                  <>
+                    {role ? (
+                      <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
+                        Connect Wallet
+                      </button>
+                    ) : (
+                      <Dropdown
+                        title="Choose Your Role"
+                        options={["Investor", "Venture Capital"]}
+                        onSelect={handleOnRoleSelected}
+                      />
+                    )}
+                  </>
                 );
               }
 

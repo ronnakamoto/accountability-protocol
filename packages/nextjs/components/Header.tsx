@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Bars3Icon, BugAntIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BookOpenIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -16,7 +16,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
       passHref
       className={`${
         isActive ? "bg-secondary shadow-md" : ""
-      } hover:bg-secondary hover:shadow-md focus:bg-secondary py-1.5 px-3 text-sm rounded-full gap-2`}
+      } hover:bg-secondary hover:shadow-md focus:bg-secondary py-1.5 px-3 text-sm gap-2`}
     >
       {children}
     </Link>
@@ -41,14 +41,14 @@ export const Header = () => {
       </li>
       <li>
         <NavLink href="/debug">
-          <BugAntIcon className="h-4 w-4" />
-          Debug Contracts
+          <BookOpenIcon className="h-4 w-4" />
+          Documentation
         </NavLink>
       </li>
       <li>
         <NavLink href="/example-ui">
-          <SparklesIcon className="h-4 w-4" />
-          Example UI
+          <QuestionMarkCircleIcon className="h-4 w-4" />
+          About
         </NavLink>
       </li>
     </>
@@ -83,8 +83,8 @@ export const Header = () => {
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
           </Link>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-eth</span>
-            <span className="text-xs">Ethereum dev stack</span>
+            <span className="font-bold leading-tight">Accountability</span>
+            <span className="text-xs">Protocol</span>
           </div>
         </div>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">{navLinks}</ul>
