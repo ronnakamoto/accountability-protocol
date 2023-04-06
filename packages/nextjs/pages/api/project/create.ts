@@ -1,4 +1,4 @@
-import prisma from "~~/prisma/prism";
+import prisma from "~~/prisma/prisma";
 
 function bigIntReplacer(_key: any, value: any) {
   if (typeof value === "bigint") {
