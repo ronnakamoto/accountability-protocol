@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { isAddress } from "ethers/lib/utils";
-import Blockies from "react-blockies";
+// import Blockies from "react-blockies";
 import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
 import { CommonInputProps, InputBase } from "~~/components/scaffold-eth";
 
@@ -60,7 +60,7 @@ export const AddressInput = ({ value, name, placeholder, onChange }: CommonInput
       disabled={isEnsAddressLoading || isEnsNameLoading}
       prefix={
         ensName && (
-          <div className="flex bg-base-300 rounded-l-full items-center">
+          <div className="flex items-center">
             {ensAvatar ? (
               <span className="w-[35px]">
                 {
@@ -73,7 +73,7 @@ export const AddressInput = ({ value, name, placeholder, onChange }: CommonInput
           </div>
         )
       }
-      suffix={value && <Blockies className="!rounded-full" seed={value?.toLowerCase() as string} size={7} scale={5} />}
+      // suffix={value && <Blockies className="!rounded-full" seed={value?.toLowerCase() as string} size={7} scale={5} />}
     />
   );
 };

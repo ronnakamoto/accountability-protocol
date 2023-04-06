@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  VCAdmin
+  ProjectAdmin
+  Investor
+}
+
+model User {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String?
+  email        String?   @unique
+  walletAdress String
+  userType     UserType
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  Project      Project[]
+}
+
+enum ProjectStatus {
+  Draft
+  Pending
+  Active
+  Completed
+  Cancelled
+}
+
+model Project {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  projectId     Int?
+  name          String
+  description   String
+  amountToRaise BigInt
+  amountRaised  BigInt?
+  minInvestment BigInt
+  maxInvestment BigInt
+  payee         String
+  startDate     DateTime
+  endDate       DateTime
+  createdBy     String?       @map("createdBy") @db.ObjectId
+  investorCount Int?
+  user          User?         @relation(fields: [createdBy], references: [id])
+  status        ProjectStatus
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}

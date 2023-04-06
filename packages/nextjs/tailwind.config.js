@@ -2,10 +2,18 @@
 module.exports = {
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
   plugins: [require("daisyui")],
-  darkTheme: "scaffoldEthDark",
+  // darkTheme: "scaffoldEthDark",
   // DaisyUI theme colors
   daisyui: {
     themes: [
+      {
+        lofi: {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          ...require("daisyui/src/colors/themes")["[data-theme=lofi]"],
+          secondary: "#e2e8f0",
+        },
+      },
+      "black",
       {
         scaffoldEth: {
           primary: "#93BBFB",

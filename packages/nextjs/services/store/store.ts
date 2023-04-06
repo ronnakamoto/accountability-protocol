@@ -12,9 +12,13 @@ import create from "zustand";
 type TAppStore = {
   ethPrice: number;
   setEthPrice: (newEthPriceState: number) => void;
+  userRole: string;
+  setUserRole: (newUserRoleState: string) => void;
 };
 
 export const useAppStore = create<TAppStore>(set => ({
   ethPrice: 0,
   setEthPrice: (newValue: number): void => set(() => ({ ethPrice: newValue })),
+  userRole: "",
+  setUserRole: (newValue: string): void => set(() => ({ userRole: newValue })),
 }));
