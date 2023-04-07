@@ -206,7 +206,25 @@ export default function Table({ data, columns, className, onViewRowDetailsClicke
                 </>
               ) : (
                 <>
-                  <div className="btn btn-outline btn-xs cursor-pointer" onClick={() => handleEditClick(row.id)}>
+                  <div className="dropdown dropdown-right">
+                    <label tabIndex={0} className="btn btn-xs cursor-pointer">
+                      Manage
+                    </label>
+                    <ul tabIndex={0} className="dropdown-content menu p-1 shadow bg-base-100 w-52">
+                      <li>
+                        <span className="p-1" onClick={() => handleEditClick(row.id)}>
+                          Edit
+                        </span>
+                      </li>
+                      <li>
+                        <span className="p-1">Manage Milestones</span>
+                      </li>
+                      <li>
+                        <span className="p-1">Cancel</span>
+                      </li>
+                    </ul>
+                  </div>
+                  {/* <div className="btn btn-outline btn-xs cursor-pointer" onClick={() => handleEditClick(row.id)}>
                     Edit
                   </div>
                   <div
@@ -214,7 +232,7 @@ export default function Table({ data, columns, className, onViewRowDetailsClicke
                     onClick={() => console.log(`Delete row ${row.id}`)}
                   >
                     Delete
-                  </div>
+                  </div> */}
                 </>
               )}
             </td>

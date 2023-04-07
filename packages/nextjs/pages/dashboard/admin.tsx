@@ -3,6 +3,7 @@ import Head from "next/head";
 import type { NextPage } from "next";
 import AdminStatistics from "~~/components/AdminStatistics";
 import ChartPanel from "~~/components/ChartPanel";
+import ProjectSummary from "~~/components/ProjectSummary";
 import SidePanel from "~~/components/SidePanel";
 import Table from "~~/components/Table";
 import CreateProject from "~~/components/admin/CreateProject";
@@ -15,13 +16,29 @@ const AdminDashboard: NextPage = () => {
           id: 1,
           name: "Partisia",
           description: "1234 College Street, Palo Alto, USA",
-          investors: "20",
+          projectAdmin: "vitalik.eth",
+          status: "Active",
+          startDate: "2021-08-01T00:00:00.000Z",
+          endDate: "2021-08-31T00:00:00.000Z",
+          createdBy: "3xx5.eth",
+          amountRaised: 1000,
+          amountToRaise: 10000,
+          minInvestment: 1,
+          maxInvestment: 500,
         },
         {
           id: 2,
           name: "Layer Zero",
           description: "500 College Street, California, USA",
-          investors: "43",
+          projectAdmin: "ronnakamoto.eth",
+          status: "Draft",
+          startDate: "2021-08-01T00:00:00.000Z",
+          endDate: "2021-08-31T00:00:00.000Z",
+          createdBy: "3xx5.eth",
+          amountRaised: 1000,
+          amountToRaise: 10000,
+          minInvestment: 1,
+          maxInvestment: 500,
         },
       ]);
     });
@@ -96,11 +113,11 @@ const AdminDashboard: NextPage = () => {
         title={showSidePanel.type === "CREATE" ? "Add New Project" : "View Project"}
         position="right"
         isOpen={showSidePanel.show}
-        widthClasses="w-1/4 bg-zinc-100 border-l border-zinc-200 shadow"
+        widthClasses={`${selectedRow ? "w-1/2" : "w-1/4"} bg-zinc-100 border-l border-zinc-200 shadow`}
         onClose={onSidepanelClosed}
       >
         {selectedRow ? (
-          JSON.stringify(selectedRow, null, 2)
+          <ProjectSummary project={selectedRow} />
         ) : (
           <CreateProject onProjectCreatedOnchain={onProjectCreatedOnchain} onProjectDraftSaved={onProjectDraftSaved} />
         )}
@@ -140,10 +157,23 @@ const AdminDashboard: NextPage = () => {
                 isSearchable: true,
               },
               {
-                key: "investors",
-                title: "Investor Count",
-                isSortable: true,
+                key: "projectAdmin",
+                title: "Project Admin",
+                isSortable: false,
                 isSearchable: true,
+              },
+              {
+                key: "status",
+                title: "Status",
+                isSortable: false,
+                isSearchable: true,
+                render(row) {
+                  return (
+                    <span className={`badge ${row.status === "Draft" ? "bg-sky-600" : "bg-emerald-600"}`}>
+                      {row.status}
+                    </span>
+                  );
+                },
               },
             ]}
             onViewRowDetailsClicked={onViewRowDetailsClicked}

@@ -11,6 +11,7 @@ module.exports = {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           ...require("daisyui/src/colors/themes")["[data-theme=lofi]"],
           secondary: "#e2e8f0",
+          success: "#1aa260",
         },
       },
       "black",

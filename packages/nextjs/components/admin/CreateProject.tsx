@@ -123,8 +123,7 @@ export default function CreateProject({
 
   const saveDetailsOnchain = async () => {
     try {
-      const r = await writeAsync();
-      console.log("🚀 ~ file: CreateProject.tsx:115 ~ saveDetailsOnchain ~ r:", r);
+      await writeAsync();
     } catch (e) {
       console.log(e);
     }
