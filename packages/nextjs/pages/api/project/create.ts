@@ -9,7 +9,6 @@ function bigIntReplacer(_key: any, value: any) {
 
 export default async function create(req: any, res: any) {
   try {
-    console.log("req.body: ", req.body);
     const createdProject = await prisma.project.create({
       data: req.body,
     });
