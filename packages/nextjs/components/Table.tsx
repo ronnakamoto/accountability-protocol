@@ -212,6 +212,11 @@ export default function Table({ data, columns, className, onViewRowDetailsClicke
                     </label>
                     <ul tabIndex={0} className="dropdown-content menu p-1 shadow bg-base-100 w-52">
                       <li>
+                        <span className="p-1" onClick={() => handleRowViewClick(row, "")}>
+                          View
+                        </span>
+                      </li>
+                      <li>
                         <span className="p-1" onClick={() => handleEditClick(row.id)}>
                           Edit
                         </span>

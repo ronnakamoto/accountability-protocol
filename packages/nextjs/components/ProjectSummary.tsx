@@ -2,6 +2,7 @@ import CustomStep from "./CustomStep";
 import KeyValue from "./KeyValue";
 import MilestoneDetailCard from "./MilestoneDetailCard";
 import Tab from "./Tab";
+import { Address } from "./scaffold-eth";
 
 export default function ProjectSummary({ project }: any) {
   const ProjectDetails = (
@@ -10,10 +11,10 @@ export default function ProjectSummary({ project }: any) {
       <div className="divider m-0 mb-2"></div>
       <KeyValue
         data={{
-          "Project Admin": project?.projectAdmin,
+          "Project Admin": <Address address={project?.payee} format={"short"} />,
           "Start Date": project?.startDate,
           "End Date": project?.endDate,
-          "Created By": project?.createdBy,
+          "Created By": <Address address={project?.createdBy} format={"short"} />,
           "Progress(USDT)": `${Math.floor((project?.amountRaised / project?.amountToRaise) * 100)}%`,
         }}
       />
@@ -25,22 +26,22 @@ export default function ProjectSummary({ project }: any) {
       <div className="stats stats-vertical shadow">
         <div className="stat text-center py-1">
           <div className="stat-title">Amount To Raise</div>
-          <div className="stat-value text-lg">{project?.amountToRaise}</div>
+          <div className="stat-value text-lg">{project?.amountToRaise || 0}</div>
         </div>
 
         <div className="stat text-center py-1">
           <div className="stat-title">Amount Raised</div>
-          <div className="stat-value text-lg">{project?.amountRaised}</div>
+          <div className="stat-value text-lg">{project?.amountRaised || 0}</div>
         </div>
 
         <div className="stat text-center py-1">
           <div className="stat-title">Minimum Investment</div>
-          <div className="stat-value text-lg">{project?.minInvestment}</div>
+          <div className="stat-value text-lg">{project?.minInvestment || 0}</div>
         </div>
 
         <div className="stat text-center py-1">
           <div className="stat-title">Maximum Investment</div>
-          <div className="stat-value text-lg">{project?.maxInvestment}</div>
+          <div className="stat-value text-lg">{project?.maxInvestment || 0}</div>
         </div>
       </div>
     </>

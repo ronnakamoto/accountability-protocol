@@ -2,7 +2,7 @@ import prisma from "~~/prisma/prisma";
 
 function bigIntReplacer(_key: any, value: any) {
   if (typeof value === "bigint") {
-    return value.toString() + "n";
+    return value.toString(10);
   }
   return value;
 }
