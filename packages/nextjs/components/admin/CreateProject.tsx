@@ -97,6 +97,27 @@ export default function CreateProject({
     });
   };
 
+  useEffect(() => {
+    const saveDetailsOnchain = async () => {
+      try {
+        if (!createNewProjectArgs.length) {
+          throw new Error("No data to save on chain");
+        }
+        await writeAsync();
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (!createNewProjectArgs.length) {
+      return;
+    }
+    saveDetailsOnchain().then(() => {
+      setIsSubmitButtonLoading(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createNewProjectArgs]);
+
   const saveDetailsOffChain = async (payload: any) => {
     try {
       const { name } = payload;
@@ -114,20 +135,11 @@ export default function CreateProject({
       if (response.ok) {
         const { id } = await response.json();
         setCreatedProjectId(id);
-        setCreateNewProjectArgs(Object.values(state));
       } else {
         console.error("Error:", response.statusText);
       }
     } catch (error) {
       console.error("Error:", error);
-    }
-  };
-
-  const saveDetailsOnchain = async () => {
-    try {
-      await writeAsync();
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -146,8 +158,7 @@ export default function CreateProject({
       status: "Pending",
     };
     await saveDetailsOffChain(dataToSaveOffchain);
-    await saveDetailsOnchain();
-    setIsSubmitButtonLoading(false);
+    setCreateNewProjectArgs(Object.values(state));
   };
 
   const onSaveDraftClicked = async (e: any) => {
