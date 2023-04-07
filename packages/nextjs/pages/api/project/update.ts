@@ -16,7 +16,7 @@ export default async function update(req: any, res: any) {
       },
       data: dataToUpdate,
     });
-    res.status(201).json(JSON.stringify(updatedProject, bigIntReplacer));
+    res.status(201).json(JSON.parse(JSON.stringify(updatedProject, bigIntReplacer)));
   } catch (error: any) {
     console.log("error: ", error);
     res.status(400).json({ error: error.message });

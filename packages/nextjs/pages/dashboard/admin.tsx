@@ -7,45 +7,15 @@ import ProjectSummary from "~~/components/ProjectSummary";
 import SidePanel from "~~/components/SidePanel";
 import Table from "~~/components/Table";
 import CreateProject from "~~/components/admin/CreateProject";
+import { Address } from "~~/components/scaffold-eth/Address";
 import { useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 const AdminDashboard: NextPage = () => {
   const getProjects = () => {
-    return new Promise(resolve => {
-      resolve([
-        {
-          id: 1,
-          name: "Partisia",
-          description: "1234 College Street, Palo Alto, USA",
-          projectAdmin: "vitalik.eth",
-          status: "Active",
-          startDate: "2021-08-01T00:00:00.000Z",
-          endDate: "2021-08-31T00:00:00.000Z",
-          createdBy: "3xx5.eth",
-          amountRaised: 1000,
-          amountToRaise: 10000,
-          minInvestment: 1,
-          maxInvestment: 500,
-        },
-        {
-          id: 2,
-          name: "Layer Zero",
-          description: "500 College Street, California, USA",
-          projectAdmin: "ronnakamoto.eth",
-          status: "Draft",
-          startDate: "2021-08-01T00:00:00.000Z",
-          endDate: "2021-08-31T00:00:00.000Z",
-          createdBy: "3xx5.eth",
-          amountRaised: 1000,
-          amountToRaise: 10000,
-          minInvestment: 1,
-          maxInvestment: 500,
-        },
-      ]);
-    });
+    return fetch("/api/project").then(res => res.json());
   };
 
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<any>([]);
 
   useEffect(() => {
     getProjects().then((data: any) => {
@@ -73,10 +43,6 @@ const AdminDashboard: NextPage = () => {
       transactionHash: (transactionDetails as any)?.transactionHash,
       id: updateQueue[name as string],
     };
-    console.log(
-      "🚀 ~ file: admin.tsx:68 ~ onReceiveProjectCreatedEvent ~ projectDetailsToUpdate:",
-      projectDetailsToUpdate,
-    );
 
     const response = await fetch("/api/project", {
       method: "PATCH",
@@ -87,7 +53,8 @@ const AdminDashboard: NextPage = () => {
     });
 
     if (response.ok) {
-      await response.json();
+      const addedProject = await response.json();
+      setProjects([...projects, addedProject]);
     } else {
       console.error("Error:", response.statusText);
     }
@@ -191,16 +158,19 @@ const AdminDashboard: NextPage = () => {
                 isSearchable: true,
               },
               {
-                key: "description",
-                title: "Description",
+                key: "amountRaised",
+                title: "Amount Raised",
                 isSortable: false,
                 isSearchable: true,
               },
               {
-                key: "projectAdmin",
+                key: "payee",
                 title: "Project Admin",
                 isSortable: false,
                 isSearchable: true,
+                render(row) {
+                  return <Address address={row.payee} />;
+                },
               },
               {
                 key: "status",
