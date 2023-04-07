@@ -7,6 +7,7 @@ import ProjectSummary from "~~/components/ProjectSummary";
 import SidePanel from "~~/components/SidePanel";
 import Table from "~~/components/Table";
 import CreateProject from "~~/components/admin/CreateProject";
+import { useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 const AdminDashboard: NextPage = () => {
   const getProjects = () => {
@@ -59,6 +60,44 @@ const AdminDashboard: NextPage = () => {
   });
 
   const [selectedRow, setSelectedRow] = useState(null);
+  const [updateQueue, setUpdateQueue] = useState<Record<string, any>>({});
+
+  const onReceiveProjectCreatedEvent = async (...args: unknown[]) => {
+    console.log("onReceiveProjectCreatedEvent: ", args);
+    const [projectId, name, , , , , payee, , , createdBy, transactionDetails] = args;
+    const projectDetailsToUpdate = {
+      projectId: Number((projectId as bigint).toString(10)),
+      name,
+      payee,
+      createdBy,
+      transactionHash: (transactionDetails as any)?.transactionHash,
+      id: updateQueue[name as string],
+    };
+    console.log(
+      "🚀 ~ file: admin.tsx:68 ~ onReceiveProjectCreatedEvent ~ projectDetailsToUpdate:",
+      projectDetailsToUpdate,
+    );
+
+    const response = await fetch("/api/project", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectDetailsToUpdate),
+    });
+
+    if (response.ok) {
+      await response.json();
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  };
+
+  useScaffoldEventSubscriber({
+    contractName: "AccountabilityProtocol",
+    eventName: "ProjectCreated",
+    listener: onReceiveProjectCreatedEvent,
+  });
 
   const onViewRowDetailsClicked = (row: any) => {
     console.log("View details clicked for row: ", row);
@@ -79,13 +118,14 @@ const AdminDashboard: NextPage = () => {
     setSelectedRow(null);
   };
 
-  const onProjectCreatedOnchain = (data: any) => {
+  const onProjectCreatedOnchain = async (data: any) => {
     console.log("Project created onchain: ", data);
     setShowSidePanel({
       type: "",
       show: false,
     });
     setSelectedRow(null);
+    setUpdateQueue({ ...updateQueue, [data?.projectName]: data?.id });
   };
 
   const onProjectDraftSaved = (data: any) => {

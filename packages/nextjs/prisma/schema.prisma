@@ -36,21 +36,23 @@ enum ProjectStatus {
 }
 
 model Project {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  projectId     Int?
-  name          String
-  description   String
-  amountToRaise BigInt
-  amountRaised  BigInt?
-  minInvestment BigInt
-  maxInvestment BigInt
-  payee         String
-  startDate     DateTime
-  endDate       DateTime
-  createdBy     String?       @map("createdBy") @db.ObjectId
-  investorCount Int?
-  user          User?         @relation(fields: [createdBy], references: [id])
-  status        ProjectStatus
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  projectId       Int?
+  name            String
+  description     String
+  amountToRaise   BigInt
+  amountRaised    BigInt?
+  minInvestment   BigInt
+  maxInvestment   BigInt
+  payee           String
+  startDate       DateTime
+  endDate         DateTime
+  createdBy       String?
+  userId          String?       @map("userId") @db.ObjectId
+  investorCount   Int?
+  user            User?         @relation(fields: [userId], references: [id])
+  status          ProjectStatus
+  transactionHash String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }

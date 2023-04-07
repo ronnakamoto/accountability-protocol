@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
-contract AcccountabilityProtocol {
+contract AccountabilityProtocol {
   address public vcAdmin;
   IERC20 public immutable tokenToRaise;
 
