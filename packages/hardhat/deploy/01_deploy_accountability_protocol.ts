@@ -32,7 +32,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   // Get the address of the previously deployed contract
   const circleUSDCAddress = circleUSDCDeployment.address;
 
-  await deploy("AcccountabilityProtocol", {
+  await deploy("AccountabilityProtocol", {
     from: deployer,
     // Contract constructor arguments
     args: ["0x7a188bc1B8C399e837C37A5C0F132989b9D26bDe", circleUSDCAddress],
@@ -50,4 +50,4 @@ export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["AcccountabilityProtocol"];
+deployYourContract.tags = ["AccountabilityProtocol"];

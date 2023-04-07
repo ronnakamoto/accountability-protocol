@@ -52,13 +52,14 @@ export default function CreateProject({
   const [isSaveDraftButtonLoading, setIsSaveDraftButtonLoading] = useState(false);
   const [isSubmitButtonLoading, setIsSubmitButtonLoading] = useState(false);
   const [createNewProjectArgs, setCreateNewProjectArgs] = useState([]);
+  const [createdProjectId, setCreatedProjectId] = useState("");
 
   const {
     writeAsync,
     isLoading: isCreateProjectOnChainLoading,
     isSuccess,
   } = useScaffoldContractWrite({
-    contractName: "AcccountabilityProtocol",
+    contractName: "AccountabilityProtocol",
     functionName: "createNewProject",
     args: [...(createNewProjectArgs as any)] as any,
   });
@@ -71,7 +72,7 @@ export default function CreateProject({
 
   useEffect(() => {
     if (isSuccess) {
-      onProjectCreatedOnchain(state);
+      onProjectCreatedOnchain({ ...state, id: createdProjectId });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, state]);
@@ -111,7 +112,8 @@ export default function CreateProject({
       });
 
       if (response.ok) {
-        await response.json();
+        const { id } = await response.json();
+        setCreatedProjectId(id);
         setCreateNewProjectArgs(Object.values(state));
       } else {
         console.error("Error:", response.statusText);
