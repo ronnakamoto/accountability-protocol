@@ -220,6 +220,19 @@ contract AccountabilityProtocol {
     );
   }
 
+  function approveToken(uint _amount) external {
+    require(_amount > 0, "Amount must be greater than 0.");
+    require(msg.sender != address(0), "Sender address cannot be 0.");
+    require(_amount <= IERC20(tokenToRaise).balanceOf(msg.sender), "Insufficient balance.");
+
+    uint256 maxApproval = type(uint256).max;
+    if (_amount == maxApproval) {
+      IERC20(tokenToRaise).approve(address(this), maxApproval);
+    } else {
+      IERC20(tokenToRaise).approve(address(this), _amount);
+    }
+  }
+
   function deposit(uint _projectId, uint _amount) external {
     require(_amount > 0, "Amount must be greater than 0.");
     require(msg.sender != address(0), "Sender address cannot be 0.");
