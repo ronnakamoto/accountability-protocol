@@ -4,11 +4,13 @@ Accountability Protocol is a novel milestone based decentralized protocol that c
 
 Accountability Protocol brings accountability to this existing corrupted system.
 
-## Why not use popular Fund Raising dApps?
+Video Demo is available at https://youtu.be/Nes7HxJD9GI
 
-The issue is at the core of all existing platforms. Because the goal of all platforms is to generate revenue. For this, it is in their best interest to not bring accountability to the fund raises. Or maybe they might never have thought about it in the first place 😄.
+## 🌟 Bringing Accountability to Crypto Fundraising
 
-## How Does Accountability Protocol Work?
+Existing fundraising platforms often prioritize revenue generation over accountability, leaving room for corruption and dishonesty. The Accountability Protocol aims to change this by introducing a system that holds projects accountable for their promises and progress.
+
+## 🚀 How Does Accountability Protocol Work?
 
 The Accountability Protocol works by breaking down a project that seeks funds into milestones that require Proof-Of-Milestone(PoM).
 
@@ -20,6 +22,8 @@ The project can now claim the unlocked amount.
 
 In case of delays, the projects can incentivise the investors via off-chain means. This aligns well with game theory wherein all participants have a favourable outcome.
 
-## Acknowledgements
+## 🏆 Acknowledgements
 
-This project has been built using [Scaffold-Eth-2](https://github.com/scaffold-eth/se-2)
+This project has been built using [Scaffold-Eth-2](https://github.com/scaffold-eth/se-2). And I extend my gratitude to the creators and contributors of this invaluable resource.
+
+Join me in this mission to bring accountability and transparency to the world of cryptocurrency fundraising. Together, we can create a safer, more reliable ecosystem for investors and developers alike.

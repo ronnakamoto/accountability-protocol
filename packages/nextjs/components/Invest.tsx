@@ -14,7 +14,7 @@ export default function Invest({ project }: any) {
     <>
       <KeyValue
         data={{
-          "Amount To Raise": project.amountToRaise,
+          "Amount To Raise": project?.amountToRaise || 0,
           "Start Date": format(new Date(project?.startDate), "PPpp"),
           "End Date": format(new Date(project?.endDate), "PPpp"),
           "Created By": <Address address={project?.createdBy} format={"short"} />,

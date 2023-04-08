@@ -49,7 +49,7 @@ export default function InvestorDashboard() {
         widthClasses={`w-1/2 bg-zinc-100 border-l border-zinc-200 shadow`}
         onClose={onSidepanelClosed}
       >
-        <Invest project={projectToInvestIn} />
+        {projectToInvestIn && <Invest project={projectToInvestIn} />}
       </SidePanel>
       <div className="grid-rows-3 h-screen">
         <InvestmentSummary />
