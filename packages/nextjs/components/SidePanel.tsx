@@ -36,9 +36,10 @@ const SidePanel = ({
       className={`fixed top-0 ${panelPosition} h-full ${widthClasses} z-50 bg-white transition-transform duration-300 ease-in-out transform ${
         isPanelOpen ? "translate-x-0" : `translate-x-full ${panelPosition}`
       }`}
+      style={{ willChange: "transform", zIndex: 9999 }}
     >
       <div className="flex justify-between items-center bg-primary text-white p-2">
-        <div className="text-lg">{title}</div>
+        <div className="text-lg font-extrabold pl-2">{title}</div>
         <button
           onClick={handlePanelClose}
           className="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900"
