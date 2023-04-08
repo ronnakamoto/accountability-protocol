@@ -35,7 +35,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   await deploy("AccountabilityProtocol", {
     from: deployer,
     // Contract constructor arguments
-    args: ["0x7a188bc1B8C399e837C37A5C0F132989b9D26bDe", circleUSDCAddress],
+    args: [deployer, circleUSDCAddress],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
