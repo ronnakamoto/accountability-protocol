@@ -46,6 +46,7 @@ const AdminDashboard: NextPage = () => {
     const projectDetailsToUpdate = {
       projectId: Number((projectId as bigint).toString(10)),
       name,
+      status: "Active",
       payee,
       createdBy,
       transactionHash: (transactionDetails as any)?.transactionHash,
@@ -139,6 +140,13 @@ const AdminDashboard: NextPage = () => {
     MANAGE: "w-2/3",
   }[showSidePanel?.type || "CREATE"];
 
+  const projectStatus: Record<string, string> = {
+    Active: "bg-emerald-600",
+    Draft: "bg-sky-600",
+    Completed: "bg-orange-400",
+    Cancelled: "bg-red-400",
+  };
+
   return (
     <>
       <Head>
@@ -173,24 +181,24 @@ const AdminDashboard: NextPage = () => {
                 value: projects.length,
                 change: 0,
                 changeType: "up",
-                changePercentage: 0,
+                changePercentage: 1,
               },
               {
                 title: "Funds Raised",
                 value: projects.reduce(
-                  (acc: any, project: { amountRaised: any }) => acc + (project.amountRaised || 0),
+                  (acc: any, project: { amountRaised: any }) => acc + Math.floor(parseFloat(project.amountRaised) || 0),
                   0,
                 ),
                 change: 0,
                 changeType: "down",
-                changePercentage: 0,
+                changePercentage: 1,
               },
               {
                 title: "Investors",
                 value: 2,
                 change: 0,
                 changeType: "up",
-                changePercentage: 0,
+                changePercentage: 1,
               },
             ]}
           />
@@ -241,11 +249,7 @@ const AdminDashboard: NextPage = () => {
                 isSortable: false,
                 isSearchable: true,
                 render(row) {
-                  return (
-                    <span className={`badge ${row.status === "Draft" ? "bg-sky-600" : "bg-emerald-600"}`}>
-                      {row.status}
-                    </span>
-                  );
+                  return <span className={`badge ${projectStatus[row.status]}`}>{row.status}</span>;
                 },
               },
             ]}
