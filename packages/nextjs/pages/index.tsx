@@ -1,7 +1,21 @@
+import { useEffect } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import type { NextPage } from "next";
+import { useAppStore } from "~~/services/store/store";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const userRole = useAppStore(state => state.userRole);
+
+  useEffect(() => {
+    if (userRole === "Investor") {
+      router.push("/dashboard/investor");
+    } else if (userRole === "Venture Capital") {
+      router.push("/dashboard/admin");
+    }
+  }, [router, userRole]);
+
   return (
     <>
       <Head>
