@@ -40,19 +40,51 @@ model Project {
   projectId       Int?
   name            String
   description     String
-  amountToRaise   BigInt
-  amountRaised    BigInt?
-  minInvestment   BigInt
-  maxInvestment   BigInt
+  amountToRaise   BigInt        @default(0)
+  amountRaised    BigInt?       @default(0)
+  minInvestment   BigInt        @default(0)
+  maxInvestment   BigInt        @default(0)
   payee           String
   startDate       DateTime
   endDate         DateTime
   createdBy       String?
   userId          String?       @map("userId") @db.ObjectId
-  investorCount   Int?
+  investorCount   Int?          @default(0)
   user            User?         @relation(fields: [userId], references: [id])
-  status          ProjectStatus
+  status          ProjectStatus @default(Draft)
   transactionHash String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+  Milestone       Milestone[]
+}
+
+enum MilestoneStatus {
+  NotStarted
+  InProgress
+  onHold
+  Completed
+  Cancelled
+  Claimed
+}
+
+enum QuorumType {
+  FixedValue
+  Percentage
+  AdminOverride
+}
+
+model Milestone {
+  id               String           @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  description      String
+  amountToUnlock   BigInt           @default(0)
+  deadline         DateTime
+  projectId        String?          @map("projectId") @db.ObjectId
+  onchainProjectId Int?
+  project          Project?         @relation(fields: [projectId], references: [id])
+  status           MilestoneStatus? @default(NotStarted)
+  quorumType       QuorumType?
+  quorumThreshold  Int?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 }

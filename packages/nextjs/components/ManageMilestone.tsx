@@ -1,8 +1,9 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Collapse from "./Collapse";
 import DatetimePicker from "./DateTimePicker";
 import KeyValue from "./KeyValue";
 import { format } from "date-fns";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 enum FieldType {
   Number = 1,
@@ -10,14 +11,26 @@ enum FieldType {
   Date = 3,
 }
 
-export default function ManageMilestone() {
+export default function ManageMilestone({ project, onMilestoneCreatedOnchain }: any) {
   const [milestones, setMilestones] = useState<any>([]);
   const [isAddMilestoneLoading, setIsAddMilestoneLoading] = useState(false);
+  const [addedMilestoneId, setAddedMilestoneId] = useState("");
+  const [addMilestoneArgs, setAddMilestoneArgs] = useState<any>([]);
+  const {
+    writeAsync,
+    isLoading: isAddMilestoneOnChainLoading,
+    isSuccess,
+  } = useScaffoldContractWrite({
+    contractName: "AccountabilityProtocol",
+    functionName: "addMilestone",
+    args: [...(addMilestoneArgs as any)] as any,
+  });
+
   const initialState = {
     name: "",
     description: "",
-    unlockAmount: 0,
-    unlockDate: new Date(),
+    amountToUnlock: 0,
+    deadline: new Date(),
     quorumType: "",
     quorumThreshold: 0,
   };
@@ -61,12 +74,90 @@ export default function ManageMilestone() {
     });
   };
 
-  const onAddMilestoneClicked = (e: any) => {
+  const saveMilestoneOffchain = async (milestone: any) => {
+    milestone.deadline = new Date(milestone.deadline * 1000);
+    const response = await fetch("/api/milestone", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(milestone),
+    });
+
+    if (response.ok) {
+      const milestone: any = await response.json();
+      setAddedMilestoneId(milestone.id);
+      setMilestones([...milestones, milestone]);
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  };
+
+  useEffect(() => {
+    const saveDetailsOnchain = async () => {
+      try {
+        if (!addMilestoneArgs.length) {
+          throw new Error("No data to save on chain");
+        }
+        await writeAsync();
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (!addMilestoneArgs.length) {
+      return;
+    }
+    saveDetailsOnchain().then(() => {
+      setIsAddMilestoneLoading(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addMilestoneArgs]);
+
+  useEffect(() => {
+    if (!isAddMilestoneOnChainLoading) {
+      dispatch({ type: "RESET_FORM" });
+    }
+  }, [isAddMilestoneOnChainLoading]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (onMilestoneCreatedOnchain) {
+        onMilestoneCreatedOnchain({ ...state, id: addedMilestoneId });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, state]);
+
+  const quorumTypeOnchainMap: Record<string, number> = {
+    FixedValue: 0,
+    Percentage: 1,
+    AdminOverride: 2,
+  };
+
+  const onAddMilestoneClicked = async (e: any) => {
     e.preventDefault();
     setIsAddMilestoneLoading(true);
     console.log(state);
-    setMilestones([...milestones, state]);
-    setIsAddMilestoneLoading(false);
+    await saveMilestoneOffchain({ ...state, status: "NotStarted", projectId: project.id });
+    setAddMilestoneArgs([
+      project.projectId,
+      state.name,
+      state.description,
+      state.amountToUnlock,
+      state.deadline,
+      state.quorumThreshold,
+      quorumTypeOnchainMap[state.quorumType],
+    ]);
+  };
+
+  const milestoneStatus: Record<string, string> = {
+    NotStarted: "Not Started",
+    InProgress: "In Progress",
+    onHold: "On Hold",
+    Completed: "Completed",
+    Cancelled: "Cancelled",
+    Claimed: "Claimed",
   };
 
   const addNewMilestone = (
@@ -104,16 +195,16 @@ export default function ManageMilestone() {
           type="number"
           placeholder="Amount to unlock"
           className="input input-sm input-bordered w-full max-w-xs"
-          value={state.unlockAmount}
-          onChange={e => onChange("unlockAmount", e.target.value, FieldType.Number)}
+          value={state.amountToUnlock}
+          onChange={e => onChange("amountToUnlock", e.target.value, FieldType.Number)}
         />
       </div>
       <div className="form-control w-full max-w-xs">
         <label className="label">
-          <span className="label-text">What is the unlock date & time for milestone?</span>
+          <span className="label-text">What is the deadline date & time for milestone?</span>
         </label>
 
-        <DatetimePicker onChange={date => onChange("unlockDate", date, FieldType.Date)} />
+        <DatetimePicker onChange={date => onChange("deadline", date, FieldType.Date)} />
       </div>
       <div className="form-control w-full max-w-xs">
         <label className="label">
@@ -168,8 +259,8 @@ export default function ManageMilestone() {
                     <KeyValue
                       data={{
                         Name: milestone.name,
-                        "Unlock Amount": milestone.unlockAmount,
-                        "Deadline Date": format(new Date(milestone.unlockDate), "PPpp"),
+                        "Unlock Amount": milestone.amountToUnlock,
+                        "Deadline Date": format(new Date(milestone.deadline), "PPpp"),
                         "Quorum Type": milestone.quorumType,
                         "Quorum Threshold": milestone.quorumThreshold,
                       }}
@@ -177,7 +268,7 @@ export default function ManageMilestone() {
                     <p className="font-light">{milestone.description}</p>
                   </div>
                 }
-                badgeContent="Started"
+                badgeContent={milestoneStatus[milestone.status]}
               />
             );
           })
