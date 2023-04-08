@@ -162,7 +162,7 @@ const AdminDashboard: NextPage = () => {
         {showSidePanel.type === "CREATE" && (
           <CreateProject onProjectCreatedOnchain={onProjectCreatedOnchain} onProjectDraftSaved={onProjectDraftSaved} />
         )}
-        {showSidePanel.type === "MANAGE" && <ManageMilestone />}
+        {showSidePanel.type === "MANAGE" && <ManageMilestone project={showSidePanel.context} />}
       </SidePanel>
       <div className="grid grid-cols-6 gap-4 grid-flow-row">
         <div className="col-start-2 col-span-4 flex flex-row grow m-4">
