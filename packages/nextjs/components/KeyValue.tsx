@@ -5,7 +5,7 @@ const KeyValue = ({ data }: any) => {
         <div key={key} className="flex items-center justify-between">
           <span className="font-semibold">{key}</span>
           <span className="flex-grow mx-4 border-b border-dotted border-gray-500"></span>
-          <span>{value}</span>
+          <span className="font-light">{value}</span>
         </div>
       ))}
     </div>

@@ -3,6 +3,7 @@ import KeyValue from "./KeyValue";
 import MilestoneDetailCard from "./MilestoneDetailCard";
 import Tab from "./Tab";
 import { Address } from "./scaffold-eth";
+import { format } from "date-fns";
 
 export default function ProjectSummary({ project }: any) {
   const ProjectDetails = (
@@ -12,8 +13,8 @@ export default function ProjectSummary({ project }: any) {
       <KeyValue
         data={{
           "Project Admin": <Address address={project?.payee} format={"short"} />,
-          "Start Date": project?.startDate,
-          "End Date": project?.endDate,
+          "Start Date": format(new Date(project?.startDate), "PPpp"),
+          "End Date": format(new Date(project?.endDate), "PPpp"),
           "Created By": <Address address={project?.createdBy} format={"short"} />,
           "Progress(USDT)": `${Math.floor((project?.amountRaised / project?.amountToRaise) * 100)}%`,
         }}

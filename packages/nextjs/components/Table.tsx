@@ -16,6 +16,7 @@ interface TableProps {
   columns: TableColumn[];
   className?: string;
   onViewRowDetailsClicked?: (row: Record<string, any>) => void;
+  onManageMilestoneClicked?: (row: Record<string, any>) => void;
 }
 
 interface HoveredCell {
@@ -23,7 +24,13 @@ interface HoveredCell {
   columnKey: string | null;
 }
 
-export default function Table({ data, columns, className, onViewRowDetailsClicked }: TableProps) {
+export default function Table({
+  data,
+  columns,
+  className,
+  onViewRowDetailsClicked,
+  onManageMilestoneClicked,
+}: TableProps) {
   const [search, setSearch] = useState<Record<string, string>>({});
   const [sortKey, setSortKey] = useState(columns[0].key);
   const [isAscending, setIsAscending] = useState(true);
@@ -108,6 +115,12 @@ export default function Table({ data, columns, className, onViewRowDetailsClicke
   const handleRowViewClick = (row: Record<string, any>, _: string) => {
     if (onViewRowDetailsClicked) {
       onViewRowDetailsClicked(row);
+    }
+  };
+
+  const handleManageMilestoneClick = (row: Record<string, any>) => {
+    if (onManageMilestoneClicked) {
+      onManageMilestoneClicked(row);
     }
   };
 
@@ -222,7 +235,9 @@ export default function Table({ data, columns, className, onViewRowDetailsClicke
                         </span>
                       </li>
                       <li>
-                        <span className="p-1">Manage Milestones</span>
+                        <span className="p-1" onClick={() => handleManageMilestoneClick(row)}>
+                          Manage Milestones
+                        </span>
                       </li>
                       <li>
                         <span className="p-1">Cancel</span>

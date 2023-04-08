@@ -3,12 +3,19 @@ import Head from "next/head";
 import type { NextPage } from "next";
 import AdminStatistics from "~~/components/AdminStatistics";
 import ChartPanel from "~~/components/ChartPanel";
+import ManageMilestone from "~~/components/ManageMilestone";
 import ProjectSummary from "~~/components/ProjectSummary";
 import SidePanel from "~~/components/SidePanel";
 import Table from "~~/components/Table";
 import CreateProject from "~~/components/admin/CreateProject";
 import { Address } from "~~/components/scaffold-eth/Address";
 import { useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+
+interface ShowSidePanelState {
+  type: string;
+  show: boolean;
+  context: any;
+}
 
 const AdminDashboard: NextPage = () => {
   const getProjects = () => {
@@ -24,9 +31,10 @@ const AdminDashboard: NextPage = () => {
     });
   }, []);
 
-  const [showSidePanel, setShowSidePanel] = useState({
+  const [showSidePanel, setShowSidePanel] = useState<ShowSidePanelState>({
     type: "",
     show: false,
+    context: null,
   });
 
   const [selectedRow, setSelectedRow] = useState(null);
@@ -74,6 +82,7 @@ const AdminDashboard: NextPage = () => {
     setShowSidePanel({
       type: "VIEW",
       show: true,
+      context: row,
     });
   };
 
@@ -81,6 +90,7 @@ const AdminDashboard: NextPage = () => {
     setShowSidePanel({
       type: "",
       show: false,
+      context: null,
     });
     setSelectedRow(null);
   };
@@ -90,6 +100,7 @@ const AdminDashboard: NextPage = () => {
     setShowSidePanel({
       type: "",
       show: false,
+      context: null,
     });
     setSelectedRow(null);
     setUpdateQueue({ ...updateQueue, [data?.projectName]: data?.id });
@@ -100,9 +111,33 @@ const AdminDashboard: NextPage = () => {
     setShowSidePanel({
       type: "",
       show: false,
+      context: null,
     });
     setSelectedRow(null);
   };
+
+  const onManageMilestoneClicked = (row: any) => {
+    console.log("Manage milestones clicked for row: ", row);
+
+    setShowSidePanel({
+      type: "MANAGE",
+      show: true,
+      context: row,
+    });
+  };
+
+  const sidePanelTitle: string | undefined = {
+    CREATE: "Add New Project",
+    VIEW: "View Project",
+    MANAGE: `Manage Milestones For ${showSidePanel?.context?.name}`,
+    DEFAULT: "",
+  }[showSidePanel?.type || "DEFAULT"];
+
+  const sidePanelWidth = {
+    CREATE: "w-1/4",
+    VIEW: "w-1/2",
+    MANAGE: "w-2/3",
+  }[showSidePanel?.type || "CREATE"];
 
   return (
     <>
@@ -117,17 +152,17 @@ const AdminDashboard: NextPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap" rel="stylesheet" />
       </Head>
       <SidePanel
-        title={showSidePanel.type === "CREATE" ? "Add New Project" : "View Project"}
+        title={sidePanelTitle}
         position="right"
         isOpen={showSidePanel.show}
-        widthClasses={`${selectedRow ? "w-1/2" : "w-1/4"} bg-zinc-100 border-l border-zinc-200 shadow`}
+        widthClasses={`${sidePanelWidth} bg-zinc-100 border-l border-zinc-200 shadow`}
         onClose={onSidepanelClosed}
       >
-        {selectedRow ? (
-          <ProjectSummary project={selectedRow} />
-        ) : (
+        {showSidePanel.type === "VIEW" && <ProjectSummary project={selectedRow} />}
+        {showSidePanel.type === "CREATE" && (
           <CreateProject onProjectCreatedOnchain={onProjectCreatedOnchain} onProjectDraftSaved={onProjectDraftSaved} />
         )}
+        {showSidePanel.type === "MANAGE" && <ManageMilestone />}
       </SidePanel>
       <div className="grid grid-cols-6 gap-4 grid-flow-row">
         <div className="col-start-2 col-span-4 flex flex-row grow m-4">
@@ -141,6 +176,7 @@ const AdminDashboard: NextPage = () => {
               setShowSidePanel({
                 type: "CREATE",
                 show: true,
+                context: null,
               })
             }
           >
@@ -187,6 +223,7 @@ const AdminDashboard: NextPage = () => {
               },
             ]}
             onViewRowDetailsClicked={onViewRowDetailsClicked}
+            onManageMilestoneClicked={onManageMilestoneClicked}
           />
         </div>
       </div>
