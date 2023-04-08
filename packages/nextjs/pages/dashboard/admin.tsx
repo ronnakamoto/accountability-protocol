@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import type { NextPage } from "next";
-import AdminStatistics from "~~/components/AdminStatistics";
 import ChartPanel from "~~/components/ChartPanel";
 import ManageMilestone from "~~/components/ManageMilestone";
 import ProjectSummary from "~~/components/ProjectSummary";
 import SidePanel from "~~/components/SidePanel";
 import Table from "~~/components/Table";
+import VerticalStatistics from "~~/components/VerticalStatistics";
 import CreateProject from "~~/components/admin/CreateProject";
 import { Address } from "~~/components/scaffold-eth/Address";
 import { useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
@@ -166,7 +166,34 @@ const AdminDashboard: NextPage = () => {
       </SidePanel>
       <div className="grid grid-cols-6 gap-4 grid-flow-row">
         <div className="col-start-2 col-span-4 flex flex-row grow m-4">
-          <AdminStatistics />
+          <VerticalStatistics
+            data={[
+              {
+                title: "Total Projects",
+                value: projects.length,
+                change: 0,
+                changeType: "up",
+                changePercentage: 0,
+              },
+              {
+                title: "Funds Raised",
+                value: projects.reduce(
+                  (acc: any, project: { amountRaised: any }) => acc + (project.amountRaised || 0),
+                  0,
+                ),
+                change: 0,
+                changeType: "down",
+                changePercentage: 0,
+              },
+              {
+                title: "Investors",
+                value: 2,
+                change: 0,
+                changeType: "up",
+                changePercentage: 0,
+              },
+            ]}
+          />
           <ChartPanel />
         </div>
         <div className="col-start-5 col-span-1 flex justify-end">

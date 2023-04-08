@@ -14,6 +14,10 @@ type TAppStore = {
   setEthPrice: (newEthPriceState: number) => void;
   userRole: string;
   setUserRole: (newUserRoleState: string) => void;
+  projects: any;
+  setProjects: (newProjectsState: any) => void;
+  projectToInvestIn: any;
+  setProjectToInvestIn: (newProjectToInvestInState: any) => void;
 };
 
 export const useAppStore = create<TAppStore>(set => ({
@@ -21,4 +25,8 @@ export const useAppStore = create<TAppStore>(set => ({
   setEthPrice: (newValue: number): void => set(() => ({ ethPrice: newValue })),
   userRole: "",
   setUserRole: (newValue: string): void => set(() => ({ userRole: newValue })),
+  projects: [],
+  setProjects: (newValue: any): void => set(() => ({ projects: newValue })),
+  projectToInvestIn: null,
+  setProjectToInvestIn: (newValue: any): void => set(() => ({ projectToInvestIn: newValue })),
 }));
