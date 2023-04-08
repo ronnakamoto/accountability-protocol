@@ -9,9 +9,9 @@ function bigIntReplacer(_key: any, value: any) {
 
 export default async function all(req: any, res: any) {
   try {
-    const allProjects = await prisma.project.findMany({
+    const allProjects = await prisma.milestone.findMany({
       where: {
-        createdBy: req.body.createdBy,
+        projectId: req.query.projectId,
       },
     });
     res.status(201).json(JSON.parse(JSON.stringify(allProjects, bigIntReplacer)));

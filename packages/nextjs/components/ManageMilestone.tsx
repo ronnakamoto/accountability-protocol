@@ -16,6 +16,7 @@ export default function ManageMilestone({ project, onMilestoneCreatedOnchain }: 
   const [isAddMilestoneLoading, setIsAddMilestoneLoading] = useState(false);
   const [addedMilestoneId, setAddedMilestoneId] = useState("");
   const [addMilestoneArgs, setAddMilestoneArgs] = useState<any>([]);
+  const [isMilestoneHistoryLoading, setIsMilestoneHistoryLoading] = useState(false);
   const {
     writeAsync,
     isLoading: isAddMilestoneOnChainLoading,
@@ -25,6 +26,23 @@ export default function ManageMilestone({ project, onMilestoneCreatedOnchain }: 
     functionName: "addMilestone",
     args: [...(addMilestoneArgs as any)] as any,
   });
+
+  const getMilestones = async () => {
+    const response = await fetch(`/api/milestone?projectId=${project.id}`);
+    if (response.ok) {
+      const milestones: any = await response.json();
+      setMilestones(milestones);
+      setIsMilestoneHistoryLoading(false);
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  };
+
+  useEffect(() => {
+    setIsMilestoneHistoryLoading(true);
+    getMilestones();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const initialState = {
     name: "",
@@ -274,8 +292,9 @@ export default function ManageMilestone({ project, onMilestoneCreatedOnchain }: 
           })
         ) : (
           <div className="text-gray-500 font-light">
-            No milestones added yet. Please add one from the &quot;Add New Milestone&quot; panel on the left side of
-            this panel
+            {isMilestoneHistoryLoading
+              ? "Loading milestones..."
+              : "No milestones added yet. Please add one from the &quot;Add New Milestone&quot; panel on the left side of this panel"}
           </div>
         )}
       </div>
