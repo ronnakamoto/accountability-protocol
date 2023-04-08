@@ -44,6 +44,7 @@ export default function InvestmentSummary() {
         .map((project: any) => ({
           name: project.name,
           remainingAllocation: parseFloat(project.amountToRaise || 0) - parseFloat(project.amountRaised || 0) || 0,
+          ...project,
         }));
       console.log("🚀 ~ file: InvestmentSummary.tsx:50 ~ getProjects ~ ongoingProjects:", ongoingProjects);
       setProjects(ongoingProjects);

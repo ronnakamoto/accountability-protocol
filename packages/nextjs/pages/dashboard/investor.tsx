@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import Invest from "~~/components/Invest";
 import InvestmentSummary from "~~/components/InvestmentSummary";
 import SidePanel from "~~/components/SidePanel";
 import { useAppStore } from "~~/services/store/store";
@@ -48,7 +49,7 @@ export default function InvestorDashboard() {
         widthClasses={`w-1/2 bg-zinc-100 border-l border-zinc-200 shadow`}
         onClose={onSidepanelClosed}
       >
-        <div>Invest here</div>
+        <Invest project={projectToInvestIn} />
       </SidePanel>
       <div className="grid-rows-3 h-screen">
         <InvestmentSummary />

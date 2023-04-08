@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import Dropdown from "../Dropdown";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import shallow from "zustand/shallow";
@@ -11,6 +12,7 @@ import { getTargetNetwork } from "~~/utils/scaffold-eth";
  * Custom Wagmi Connect Button (watch balance + custom design)
  */
 export const RainbowKitCustomConnectButton = () => {
+  const router = useRouter();
   useAutoConnect();
 
   const networkColor = useNetworkColor();
@@ -20,6 +22,11 @@ export const RainbowKitCustomConnectButton = () => {
   const handleOnRoleSelected = (role: string) => {
     setRole(role);
     console.log("Role selected:", role);
+    if (role === "Investor") {
+      router.push("/dashboard/investor");
+    } else if (role === "Venture Capital") {
+      router.push("/dashboard/admin");
+    }
   };
 
   return (
@@ -33,17 +40,9 @@ export const RainbowKitCustomConnectButton = () => {
               if (!connected) {
                 return (
                   <>
-                    {role ? (
-                      <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
-                        Connect Wallet
-                      </button>
-                    ) : (
-                      <Dropdown
-                        title="Choose Your Role"
-                        options={["Investor", "Venture Capital"]}
-                        onSelect={handleOnRoleSelected}
-                      />
-                    )}
+                    <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
+                      Connect Wallet
+                    </button>
                   </>
                 );
               }
@@ -65,17 +64,20 @@ export const RainbowKitCustomConnectButton = () => {
               return (
                 <div className="px-2 flex justify-end items-center">
                   <div className="flex justify-center items-center border-1 rounded-lg">
+                    <div className="mx-2">
+                      <Dropdown
+                        title={`${role ? "Switch Role" : "Choose Your Role"}`}
+                        options={["Investor", "Venture Capital"]}
+                        onSelect={handleOnRoleSelected}
+                      />
+                    </div>
                     <div className="flex flex-col items-center">
                       <Balance address={account.address} className="min-h-0 h-auto" />
                       <span className="text-xs" style={{ color: networkColor }}>
                         {chain.name}
                       </span>
                     </div>
-                    <button
-                      onClick={openAccountModal}
-                      type="button"
-                      className="btn btn-secondary btn-sm pl-0 pr-2 shadow-md"
-                    >
+                    <button onClick={openAccountModal} type="button" className="btn btn-primary btn-sm pl-0 pr-2">
                       <BlockieAvatar address={account.address} size={24} ensImage={account.ensAvatar} />
                       <span className="ml-2 mr-1">{account.displayName}</span>
                       <span>
